@@ -191,19 +191,7 @@ ToolExecutor (Base Class)
 docker-compose up
 ```
 
-### 2. Kubernetes Deployment
-```bash
-# Deploy to K8s cluster
-kubectl apply -f k8s/
-```
-
-**Features**:
-- Horizontal Pod Autoscaler (3-20 replicas)
-- LoadBalancer service
-- Persistent storage for outputs
-- Resource limits and requests
-
-### 3. Firecracker VMs (Production)
+### 2. Firecracker VMs (Production)
 
 **Future Enhancement**: Replace Docker with Firecracker VMs
 - **MicroVMs**: 100ms boot time

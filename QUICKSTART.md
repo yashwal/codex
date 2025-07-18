@@ -9,7 +9,7 @@ A complete sandboxed coding agent system with:
 - **🔧 Tools**: Shell, code execution (Python/TypeScript), xdot GUI automation, filesystem ops
 - **🌐 GUI Access**: VNC/noVNC for remote desktop, Jupyter notebooks
 - **🎯 Orchestration**: FastAPI server with job scheduling and management
-- **📈 Scalability**: Kubernetes ready with auto-scaling
+- **📈 Scalability**: Ready for container orchestration
 
 ## 🏗️ Architecture Overview
 
@@ -133,23 +133,8 @@ When a job is running, you can access:
 docker-compose up
 ```
 
-### Kubernetes (Production)
-```bash
-# Deploy to cluster
-kubectl apply -f k8s/
-
-# Scale up/down
-kubectl scale deployment coding-agent-orchestrator --replicas=10
-
-# Check status
-kubectl get pods -l app=coding-agent-orchestrator
-```
-
-### Features in Kubernetes
-- **Auto-scaling**: 3-20 replicas based on CPU/memory
-- **Load balancing**: Multiple orchestrator instances
-- **Persistent storage**: Job outputs preserved
-- **Health checks**: Automatic restart on failure
+### Production (Firecracker VMs)
+- For production, adapt the orchestrator to launch Firecracker VMs with the agent container image.
 
 ## 🔧 Configuration
 
@@ -268,7 +253,6 @@ curl http://localhost:8000/status/{job_id}
 - **Stateless Design**: Orchestrators share nothing
 - **Queue-based**: Redis for job distribution
 - **Load Balancing**: Multiple instances behind LB
-- **Auto-scaling**: K8s HPA based on CPU/memory
 
 ### Performance Characteristics
 - **Container Startup**: ~10-15 seconds
@@ -329,12 +313,11 @@ curl http://localhost:8000/status/{job_id}
 - **Architecture Details**: See `ARCHITECTURE.md`
 - **API Documentation**: Visit `http://localhost:8000/docs` when running
 - **Container Logs**: Available via API or Docker commands
-- **Kubernetes Manifests**: In `k8s/` directory
 
 ## 🎯 Key Features Demonstrated
 
 ✅ **Security**: Multi-layer sandboxing with container isolation  
-✅ **Scalability**: Kubernetes deployment with auto-scaling  
+✅ **Scalability**: Ready for container orchestration  
 ✅ **Reliability**: Health checks, timeouts, resource limits  
 ✅ **Context Management**: >1M token handling with intelligent pruning  
 ✅ **Tool Integration**: Shell, code execution, GUI automation, filesystem  

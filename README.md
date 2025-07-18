@@ -47,5 +47,5 @@ curl http://localhost:8000/status/{job_id}
 - **Context Management**: Handles >1M token contexts via intelligent pruning
 - **GUI Support**: xdot integration for GUI automation
 - **VNC Access**: Remote desktop via noVNC
-- **Scalable**: Kubernetes/Nomad ready architecture
+- **Scalable**: Ready for container orchestration
 - **Security**: Multi-layer isolation with Firecracker VMs
