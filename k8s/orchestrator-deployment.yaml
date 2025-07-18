@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coding-agent-orchestrator
+  labels:
+    app: coding-agent-orchestrator
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: coding-agent-orchestrator
+  template:
+    metadata:
+      labels:
+        app: coding-agent-orchestrator
+    spec:
+      containers:
+      - name: orchestrator
+        image: coding-agent-orchestrator:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: MAX_CONCURRENT_JOBS
+          value: "5"
+        - name: DOCKER_HOST
+          value: "unix:///var/run/docker.sock"
+        volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+        - name: output-storage
+          mountPath: /tmp/agent_outputs
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
+      - name: output-storage
+        persistentVolumeClaim:
+          claimName: agent-outputs-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coding-agent-orchestrator-service
+spec:
+  selector:
+    app: coding-agent-orchestrator
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agent-outputs-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: nfs-client
